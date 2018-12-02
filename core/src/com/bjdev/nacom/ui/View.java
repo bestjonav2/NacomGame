@@ -46,6 +46,7 @@ public class View {
     private OrthogonalTiledMapRenderer mapRenderer;
     private int[] baseLayer;
     private int[] underlayer1;
+    private int[] collisionLayer;
 
     private SpriteBatch spriteBatch;
 
@@ -162,6 +163,8 @@ public class View {
         baseLayer[0] = 0;
         underlayer1 = new int[1];
         underlayer1[0] = 1;
+        collisionLayer = new int[1];
+        collisionLayer[0] = 2;
 
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/advocut-webfont.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
@@ -218,8 +221,10 @@ public class View {
 
         mapRenderer.setView(camera);
 
+
         mapRenderer.render(baseLayer);
         mapRenderer.render(underlayer1);
+        //mapRenderer.render(collisionLayer);
 
         sortedUpSprites = new Array<Sprite>(sprites);
         sortedUpSprites.sort(new SpriteUpComparator());

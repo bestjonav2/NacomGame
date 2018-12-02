@@ -1,11 +1,15 @@
 package com.bjdev.nacom.ui;
 
-import com.badlogic.gdx.ApplicationListener;
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.maps.MapLayer;
+import com.badlogic.gdx.maps.MapObjects;
+import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
@@ -17,8 +21,6 @@ import com.bjdev.nacom.players.Sprite;
 import com.bjdev.nacom.players.StationarySprite;
 
 import java.util.HashMap;
-
-import sun.rmi.runtime.Log;
 
 public class GameUI implements Screen{
 
@@ -51,6 +53,7 @@ public class GameUI implements Screen{
     public GameUI (MainNacom game){
         this.game = game;
         level01 = new Map1();
+        Gdx.app.setLogLevel(Application.LOG_DEBUG);
 
         levels = new Array<MapEntity>();
         levels.add(level01);
@@ -203,7 +206,7 @@ public class GameUI implements Screen{
             }
             sprite.getVelocity().scl(deltaTime);
 
-            detectCollisions(sprite, 2);
+            detectCollisions(sprite, 3);
 
             // Scale the velocity by the inverse delta time and set the latest position.
             sprite.getPosition().add(sprite.getVelocity());
@@ -242,9 +245,39 @@ public class GameUI implements Screen{
 
     public void detectCollisions(Sprite sprite, int layerIndex) {
         Rectangle spriteRect = rectPool.obtain();
-        spriteRect.set(sprite.getX() + 0.3f, sprite.getY() - 0.3f, Sprite.SIZE - 0.6f, Sprite.SIZE - 0.6f);
+        spriteRect.set(sprite.getX() / 0.16f, sprite.getY() / 0.16f, Sprite.SIZE, Sprite.SIZE);
         int startX, startY, endX, endY;
 
+        MapLayer collisionObjectLayer = map.getLayers().get(layerIndex);
+        MapObjects objects = collisionObjectLayer.getObjects();
+
+        // there are several other types, Rectangle is probably the most common one
+        for (RectangleMapObject rectangleObject : objects.getByType(RectangleMapObject.class)) {
+
+            Rectangle rectangle = rectangleObject.getRectangle();
+            if (Intersector.overlaps(rectangle, spriteRect)) {
+                Gdx.app.debug("CollisionTiles", "Collision");
+                Gdx.app.debug("CollisionTiles", "State: " + sprite.getState());
+                if(sprite.getState() == Sprite.State.walkFront){
+                    sprite.setPosition(sprite.getX(), sprite.getY() - 0.1f);
+                    sprite.setDY(0);
+                }
+                if(sprite.getState() == Sprite.State.walkBack){
+                    sprite.setPosition(sprite.getX(), sprite.getY() + 0.1f);
+                    sprite.setDY(0);
+                }
+                if(sprite.getState() == Sprite.State.walkLeft){
+                    sprite.setPosition(sprite.getX() - 0.1f, sprite.getY());
+                    sprite.setDX(0);
+                }
+                if(sprite.getState() == Sprite.State.walkRight){
+                    sprite.setPosition(sprite.getX() + 0.1f, sprite.getY());
+                    sprite.setDX(0);
+                }
+
+            }
+        }
+        /*
         // X-Axis
         if(sprite.getDX() > 0) {
             startX = endX = (int)(sprite.getX() + Sprite.SIZE + sprite.getDX());
@@ -255,7 +288,7 @@ public class GameUI implements Screen{
         endY = (int)(sprite.getY() + Sprite.SIZE);
         setTiles(startX, startY, endX, endY, tiles, layerIndex);
         spriteRect.x += sprite.getDX();
-        
+
         // Tile collision on the x-axis.
         for (Rectangle tile: tiles) {
             if(spriteRect.overlaps(tile)) {
@@ -318,7 +351,7 @@ public class GameUI implements Screen{
         }
 
         spriteRect.y = sprite.getY() - 0.3f;
-
+        */
         rectPool.free(spriteRect);
     }
 

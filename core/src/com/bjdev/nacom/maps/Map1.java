@@ -10,7 +10,7 @@ public class Map1 extends MapEntity {
     public Map1() {
         map = new TmxMapLoader().load("maps/map.tmx");
 
-        Axel player = new Axel("sprites/player_bitmap_16.png", 50, 0, 16);
+        Axel player = new Axel("sprites/player_bitmap_16.png", 0, 0, 16);
 
         sprites.add(player);
 
