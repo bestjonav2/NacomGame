@@ -18,6 +18,8 @@ import com.bjdev.nacom.players.StationarySprite;
 
 import java.util.HashMap;
 
+import sun.rmi.runtime.Log;
+
 public class GameUI implements Screen{
 
     final MainNacom game;
@@ -113,7 +115,21 @@ public class GameUI implements Screen{
     public void pause() {}
 
     @Override
-    public void resume() {}
+    public void resume() {
+        if (stateChanged) {
+            switch (state) {
+                case level01State:
+                    currentLevel = level01;
+                    setupLevel();
+                    break;
+            }
+            stateChanged = false;
+        }
+
+        view.getInput();
+        updateSprites(Gdx.graphics.getDeltaTime());
+        view.render();
+    }
 
     @Override
     public void hide() {
@@ -187,8 +203,7 @@ public class GameUI implements Screen{
             }
             sprite.getVelocity().scl(deltaTime);
 
-            detectCollisions(sprite, 1);
-            detectCollisions(sprite, 0);
+            detectCollisions(sprite, 2);
 
             // Scale the velocity by the inverse delta time and set the latest position.
             sprite.getPosition().add(sprite.getVelocity());
@@ -240,7 +255,7 @@ public class GameUI implements Screen{
         endY = (int)(sprite.getY() + Sprite.SIZE);
         setTiles(startX, startY, endX, endY, tiles, layerIndex);
         spriteRect.x += sprite.getDX();
-
+        
         // Tile collision on the x-axis.
         for (Rectangle tile: tiles) {
             if(spriteRect.overlaps(tile)) {

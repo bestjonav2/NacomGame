@@ -133,7 +133,7 @@ public class View {
         table.add(imgLeft).size(imgLeft.getWidth(),imgLeft.getHeight());
         table.add();
         table.add(imgRight).size(imgRight.getWidth(),imgRight.getHeight());
-        table.row().padBottom(5);
+        table.row().padBottom(55);
         table.add();
         table.add(imgDown).size(imgDown.getWidth(),imgDown.getHeight());
         table.add();
@@ -400,19 +400,10 @@ public class View {
             sprites.get(0).setDX(Sprite.MAX_VELOCITY);
         }
 
-        if (Gdx.input.justTouched()) {
-            //Vector3 point = getWorldPoint(Gdx.input.getX(), Gdx.input.getY());
-            //sprites.get(0).setPosition(point.x, point.y);
-
-        }
-
         if (Gdx.input.isKeyPressed(Input.Keys.H)) {
             player.setHP(player.getHP() - 1);
         }
 
-//        if (inputProcessor.keyTyped('t')) {
-//            hpLabel.setText("Changed!");
-//        }
     }
     public Vector3 getWorldPoint(float x, float y) {
         Vector3 worldPoint = new Vector3(x, y, 0);

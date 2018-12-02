@@ -8,14 +8,14 @@ public class Axel extends Sprite{
         super(textureFile, x, y);
 
         // Animations
-        standFrontAnimation = new Animation(0.3f, getFrames(texture, 3, 2, size));
-        standBackAnimation = new Animation(0.3f, getFrames(texture, 0, 2, size));
-        standLeftAnimation = new Animation(0.3f, getFrames(texture, 1, 2, size));
-        standRightAnimation = new Animation(0.3f, getFrames(texture, 2, 2, size));
-        walkFrontAnimation = new Animation(0.3f, getFrames(texture, 3, 1, size));
-        walkBackAnimation = new Animation(0.3f, getFrames(texture, 0, 1, size));
-        walkLeftAnimation = new Animation(0.3f, getFrames(texture, 1, 1, size));
-        walkRightAnimation = new Animation(0.3f, getFrames(texture, 2, 1, size));
+        standFrontAnimation = new Animation(0.3f, getFrames(texture, 3, 1, size));
+        standBackAnimation = new Animation(0.3f, getFrames(texture, 0, 1, size));
+        standLeftAnimation = new Animation(0.3f, getFrames(texture, 1, 1, size));
+        standRightAnimation = new Animation(0.3f, getFrames(texture, 2, 1, size));
+        walkFrontAnimation = new Animation(0.3f, getFrames(texture, 3, 2, size));
+        walkBackAnimation = new Animation(0.3f, getFrames(texture, 0, 2, size));
+        walkLeftAnimation = new Animation(0.3f, getFrames(texture, 1, 2, size));
+        walkRightAnimation = new Animation(0.3f, getFrames(texture, 2, 2, size));
         attackFrontAnimation = new Animation(0.3f, getFrames(texture, 3, 3, size));
         attackBackAnimation = new Animation(0.3f, getFrames(texture, 0, 3, size));
         attackLeftAnimation = new Animation(0.3f, getFrames(texture, 1, 3, size));
