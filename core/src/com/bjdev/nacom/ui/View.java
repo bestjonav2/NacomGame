@@ -64,7 +64,7 @@ public class View {
         Gdx.input.setInputProcessor(multiplexer);
 
         camera = new OrthographicCamera();
-        camera.setToOrtho(false, Gdx.graphics.getWidth() / 48f, Gdx.graphics.getHeight() / 48f);
+        camera.setToOrtho(false, Gdx.graphics.getWidth() / 60, Gdx.graphics.getHeight() / 60);
         camera.update();
 
         sprites = level.getSprites();
@@ -78,7 +78,7 @@ public class View {
         Gdx.input.setCursorCatched(true);
 
         TiledMap map = level.getMap();
-        mapRenderer = new OrthogonalTiledMapRenderer(map, 1 / 48f);
+        mapRenderer = new OrthogonalTiledMapRenderer(map, 0.16f);
         baseLayer = new int[1];
         baseLayer[0] = 0;
         underlayer1 = new int[1];
