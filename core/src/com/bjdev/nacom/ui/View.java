@@ -12,7 +12,11 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.Event;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -34,6 +38,7 @@ public class View {
     private float green;
     private float blue;
 
+    private boolean up,down,right,left;
     private Stage stage;
 
     private OrthographicCamera camera;
@@ -63,8 +68,82 @@ public class View {
         multiplexer.addProcessor(inputProcessor);
         Gdx.input.setInputProcessor(multiplexer);
 
+        Table table = new Table();
+        table.left().bottom();
+        Image imgUp = new Image(new Texture("images/up.png"));
+        imgUp.setSize(50,50);
+        imgUp.addListener(new InputListener(){
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                up=true;
+                return true;
+            }
+
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                up=false;
+            }
+        });
+        Image imgDown = new Image(new Texture("images/down.png"));
+        imgDown.setSize(50,50);
+        imgDown.addListener(new InputListener(){
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                down=true;
+                return true;
+            }
+
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                down=false;
+            }
+        });
+        Image imgRight = new Image(new Texture("images/right.png"));
+        imgRight.setSize(50,50);
+        imgRight.addListener(new InputListener(){
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                right=true;
+                return true;
+            }
+
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                right=false;
+            }
+        });
+        Image imgLeft = new Image(new Texture("images/left.png"));
+        imgLeft.setSize(50,50);
+        imgLeft.addListener(new InputListener(){
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                left=true;
+                return true;
+            }
+
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                left=false;
+            }
+        });
+        table.add();
+        table.add(imgUp).size(imgUp.getWidth(),imgUp.getHeight());
+        table.add();
+        table.row().pad(5,5,5,5);
+        table.add(imgLeft).size(imgLeft.getWidth(),imgLeft.getHeight());
+        table.add();
+        table.add(imgRight).size(imgRight.getWidth(),imgRight.getHeight());
+        table.row().padBottom(5);
+        table.add();
+        table.add(imgDown).size(imgDown.getWidth(),imgDown.getHeight());
+        table.add();
+        stage.addActor(table);
+
+
+
+
         camera = new OrthographicCamera();
-        camera.setToOrtho(false, Gdx.graphics.getWidth() / 60, Gdx.graphics.getHeight() / 60);
+        camera.setToOrtho(false, Gdx.graphics.getWidth() / 40, Gdx.graphics.getHeight() / 40);
         camera.update();
 
         sprites = level.getSprites();
@@ -226,7 +305,7 @@ public class View {
 
             switch (sprite.getState()) {
                 case standFront:
-                    sprite.setCurrentFrameTop(sprite.getStandFrontFrame());
+                    sprite.setCurrentFrameTop(sprite.getWalkFrontFrame());
                     break;
                 case standBack:
                     sprite.setCurrentFrameTop(sprite.getStandBackFrame());
@@ -302,28 +381,28 @@ public class View {
         if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
             Gdx.app.exit();
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.UP) || Gdx.input.isKeyPressed(Input.Keys.W)) {
-            sprites.get(0).setState(Sprite.State.walkBack);
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT) || up) {
+            sprites.get(0).setState(Sprite.State.walkFront);
             sprites.get(0).setDY(Sprite.MAX_VELOCITY);
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.DOWN) || Gdx.input.isKeyPressed(Input.Keys.S)) {
-            sprites.get(0).setState(Sprite.State.walkFront);
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) || down) {
+            sprites.get(0).setState(Sprite.State.walkBack);
             sprites.get(0).setDY(-Sprite.MAX_VELOCITY);
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT) || Gdx.input.isKeyPressed(Input.Keys.A)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.DOWN) || left) {
             sprites.get(0).setFacingLeft(true);
-            sprites.get(0).setState(Sprite.State.walkLeft);
+            sprites.get(0).setState(Sprite.State.walkRight);
             sprites.get(0).setDX(-Sprite.MAX_VELOCITY);
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.D)) {
-            sprites.get(0).setFacingLeft(false);
-            sprites.get(0).setState(Sprite.State.walkRight);
+        if (Gdx.input.isKeyPressed(Input.Keys.UP) || right) {
+            sprites.get(0).setFacingLeft(true);
+            sprites.get(0).setState(Sprite.State.walkLeft);
             sprites.get(0).setDX(Sprite.MAX_VELOCITY);
         }
 
         if (Gdx.input.justTouched()) {
-            Vector3 point = getWorldPoint(Gdx.input.getX(), Gdx.input.getY());
-            sprites.get(0).setPosition(point.x, point.y);
+            //Vector3 point = getWorldPoint(Gdx.input.getX(), Gdx.input.getY());
+            //sprites.get(0).setPosition(point.x, point.y);
 
         }
 
