@@ -140,7 +140,14 @@ public class View {
         table.add();
         stage.addActor(table);
 
-
+        //DIALOGOS
+        //Table diag1 = new Table();
+        //Image imgDiag1 = new Image(new Texture("images/dialog1.0.png"));
+        //imgUp.setSize(50,50);
+        //diag1.add(imgDiag1).size(imgDiag1.getWidth(),imgDiag1.getHeight());
+        //diag1.padLeft(50).padBottom(100);
+        //diag1.left().bottom();
+       // stage.addActor(diag1);
 
 
         camera = new OrthographicCamera();
@@ -251,58 +258,60 @@ public class View {
     private void renderSprites() {
         for (Sprite sprite : sortedUpSprites) {
             sprite.setAnimationTime(Gdx.graphics.getDeltaTime());
+                switch (sprite.getState()) {
+                    case standFront:
+                        if(sprite.getName().equals("Axel"))
+                        sprite.setCurrentFrame(sprite.getStandFrontFrame());
+                        break;
+                    case standBack:
 
-            switch (sprite.getState()) {
-                case standFront:
-                    sprite.setCurrentFrame(sprite.getStandFrontFrame());
-                    break;
-                case standBack:
-                    sprite.setCurrentFrame(sprite.getStandBackFrame());
-                    break;
-                case standLeft:
-                    sprite.setCurrentFrame(sprite.getStandLeftFrame());
-                    break;
-                case standRight:
-                    sprite.setCurrentFrame(sprite.getStandRightFrame());
-                    break;
-                case walkFront:
-                    sprite.setCurrentFrame(sprite.getWalkFrontFrame());
-                    break;
-                case walkBack:
-                    sprite.setCurrentFrame(sprite.getWalkBackFrame());
-                    break;
-                case walkLeft:
-                    sprite.setCurrentFrame(sprite.getWalkLeftFrame());
-                    break;
-                case walkRight:
-                    sprite.setCurrentFrame(sprite.getWalkRightFrame());
-                    break;
-                case attackFront:
-                    sprite.setCurrentFrame(sprite.getAttackFrontFrame());
-                    break;
-                case attackBack:
-                    sprite.setCurrentFrame(sprite.getAttackBackFrame());
-                    break;
-                case attackLeft:
-                    sprite.setCurrentFrame(sprite.getAttackLeftFrame());
-                    break;
-                case attackRight:
-                    sprite.setCurrentFrame(sprite.getAttackRightFrame());
-                    break;
-                case death:
-                    sprite.setCurrentFrame(sprite.getDeathFrame());
-                    break;
-            }
+                        sprite.setCurrentFrame(sprite.getStandBackFrame());
+                        break;
+                    case standLeft:
+                        sprite.setCurrentFrame(sprite.getStandLeftFrame());
+                        break;
+                    case standRight:
+                        sprite.setCurrentFrame(sprite.getStandRightFrame());
+                        break;
+                    case walkFront:
+                        sprite.setCurrentFrame(sprite.getWalkFrontFrame());
+                        break;
+                    case walkBack:
+                        sprite.setCurrentFrame(sprite.getWalkBackFrame());
+                        break;
+                    case walkLeft:
+                        sprite.setCurrentFrame(sprite.getWalkLeftFrame());
+                        break;
+                    case walkRight:
+                        sprite.setCurrentFrame(sprite.getWalkRightFrame());
+                        break;
+                    case attackFront:
+                        sprite.setCurrentFrame(sprite.getAttackFrontFrame());
+                        break;
+                    case attackBack:
+                        sprite.setCurrentFrame(sprite.getAttackBackFrame());
+                        break;
+                    case attackLeft:
+                        sprite.setCurrentFrame(sprite.getAttackLeftFrame());
+                        break;
+                    case attackRight:
+                        sprite.setCurrentFrame(sprite.getAttackRightFrame());
+                        break;
+                    case death:
+                        sprite.setCurrentFrame(sprite.getDeathFrame());
+                        break;
+                }
 
-            if (!sprite.isFacingLeft()) {
-                spriteBatch.draw(sprite.getCurrentFrame(), sprite.getX(), sprite.getY(),
-                        Sprite.SIZE, Sprite.SIZE);
-            } else {
-                spriteBatch.draw(sprite.getCurrentFrame(), sprite.getX() + Sprite.SIZE, sprite.getY(),
-                        -Sprite.SIZE, Sprite.SIZE);
+
+                if (!sprite.isFacingLeft()) {
+                    spriteBatch.draw(sprite.getCurrentFrame(), sprite.getX(), sprite.getY(),
+                            Sprite.SIZE, Sprite.SIZE);
+                } else {
+                    spriteBatch.draw(sprite.getCurrentFrame(), sprite.getX() + Sprite.SIZE, sprite.getY(),
+                            -Sprite.SIZE, Sprite.SIZE);
+                }
             }
         }
-    }
 
     private void renderSpritesTop() {
         for (Sprite sprite : sortedDownSprites) {

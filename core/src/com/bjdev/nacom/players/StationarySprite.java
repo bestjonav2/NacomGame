@@ -13,6 +13,7 @@ public class StationarySprite extends Sprite{
         this.size = size / 48f;
         animation = new Animation(rate, getFrames(texture, 0, columns, size));
         headTexture = new TextureRegion(texture, 0, -48, size, size);
+
     }
 
     public TextureRegion getAnimationFrame() {

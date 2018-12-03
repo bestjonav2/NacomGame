@@ -158,64 +158,72 @@ public class GameUI implements Screen{
     }
 
     private void updateSprites(float deltaTime) {
+        boolean bCruso = false;
         for (Sprite sprite : sprites) {
-            // Check for map edges.
-            if (sprite.getX() < 0) {
-                sprite.setX(0);
-            }
-            if (sprite.getX() > 100 - Sprite.SIZE) {
-                sprite.setX(100 - Sprite.SIZE);
-            }
-            if (sprite.getY() < 1) {
-                sprite.setY(1);
-            }
-            if (sprite.getY() > 100 - Sprite.SIZE) {
-                sprite.setY(100 - Sprite.SIZE);
-            }
+                // Check for map edges.
+            if(sprite.getName().equals("Axel")) {
+                if (sprite.getX() < 0) {
+                    sprite.setX(0);
+                }
+                if (sprite.getX() > 100 - Sprite.SIZE) {
+                    sprite.setX(100 - Sprite.SIZE);
+                }
+                if (sprite.getY() < 1) {
+                    sprite.setY(1);
+                }
+                if (sprite.getY() > 100 - Sprite.SIZE) {
+                    sprite.setY(100 - Sprite.SIZE);
+                }
 
-            // Manage velocity and switch states.
-            if (Math.abs(sprite.getDX()) > Sprite.MAX_VELOCITY) {
-                sprite.setDX(Math.signum(sprite.getDX()) * Sprite.MAX_VELOCITY);
-            }
-            if (Math.abs(sprite.getDY()) > Sprite.MAX_VELOCITY) {
-                sprite.setDY(Math.signum(sprite.getDY()) * Sprite.MAX_VELOCITY);
-            }
-            if (Math.abs(sprite.getDX()) < 1) {
-                sprite.setDX(0);
+                // Manage velocity and switch states.
+                if (Math.abs(sprite.getDX()) > Sprite.MAX_VELOCITY) {
+                    sprite.setDX(Math.signum(sprite.getDX()) * Sprite.MAX_VELOCITY);
+                }
+                if (Math.abs(sprite.getDY()) > Sprite.MAX_VELOCITY) {
+                    sprite.setDY(Math.signum(sprite.getDY()) * Sprite.MAX_VELOCITY);
+                }
+                if (Math.abs(sprite.getDX()) < 1) {
+                    sprite.setDX(0);
 
-                switch (sprite.getState()) {
-                    case walkLeft:
-                        sprite.setState(Sprite.State.standLeft);
-                        break;
-                    case walkRight:
-                        sprite.setState(Sprite.State.standRight);
-                        break;
+                    switch (sprite.getState()) {
+                        case walkLeft:
+                            sprite.setState(Sprite.State.standLeft);
+                            break;
+                        case walkRight:
+                            sprite.setState(Sprite.State.standRight);
+                            break;
+                    }
+                }
+                if (Math.abs(sprite.getDY()) < 1) {
+                    sprite.setDY(0);
+
+                    switch (sprite.getState()) {
+                        case walkFront:
+                            sprite.setState(Sprite.State.standFront);
+                            break;
+                        case walkBack:
+                            sprite.setState(Sprite.State.standBack);
+                            break;
+                    }
+                }
+                sprite.getVelocity().scl(deltaTime);
+
+                detectCollisions(sprite, 3);
+
+                // Scale the velocity by the inverse delta time and set the latest position.
+                sprite.getPosition().add(sprite.getVelocity());
+                sprite.getVelocity().scl(1 / deltaTime);
+
+                // Apply damping to the velocity so the sprite doesn't walk infinitely once a key is pressed.
+                sprite.setDX(sprite.getDX() * Sprite.DAMPING);
+                sprite.setDY(sprite.getDY() * Sprite.DAMPING);
+            }
+            else
+            {
+                if(sprites.get(0).getY()>10&&!sprite.getName().equals("d1")&&sprite.getName().equals("Aldeano")){
+                    sprite.setState(Sprite.State.standBack);
                 }
             }
-            if (Math.abs(sprite.getDY()) < 1) {
-                sprite.setDY(0);
-
-                switch (sprite.getState()) {
-                    case walkFront:
-                        sprite.setState(Sprite.State.standFront);
-                        break;
-                    case walkBack:
-                        sprite.setState(Sprite.State.standBack);
-                        break;
-                }
-            }
-            sprite.getVelocity().scl(deltaTime);
-
-            detectCollisions(sprite, 3);
-
-            // Scale the velocity by the inverse delta time and set the latest position.
-            sprite.getPosition().add(sprite.getVelocity());
-            sprite.getVelocity().scl(1 / deltaTime);
-
-            // Apply damping to the velocity so the sprite doesn't walk infinitely once a key is pressed.
-            sprite.setDX(sprite.getDX() * Sprite.DAMPING);
-            sprite.setDY(sprite.getDY() * Sprite.DAMPING);
-
         }
     }
 
